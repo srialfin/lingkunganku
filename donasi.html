@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desain Web Alfi</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: rgb(255, 253, 253);
+            margin-top: 56px;
+            background-image: url('bhn/bg.jpg'); /* Ganti dengan path gambar yang sesuai */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #333;
+        }
+        /* Navbar Styling */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background-color: rgb(29, 60, 5);
+            padding: 5px 15px;
+        }
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+        }
+        .logo {
+            max-width: 100px;
+        }
+        .navbar-nav .nav-link {
+            font-weight: 600;
+            color: white !important;
+            text-transform: uppercase;
+            padding: 8px 10px;
+            font-size: 13px;
+        }
+        .navbar-nav .nav-link:hover {
+            background-color: rgba(70, 53, 53, 0.2);
+            transition: 0.3s;
+        }
+
+        /* Jumbotron Section Styling */
+        #jumbotron-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding-top: 80px; /* Give space for navbar */
+        }
+        .jumbotron {
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+            color: rgb(0, 0, 0); /* Text color */
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .donation-container {
+            background: #fff;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .btn-donate {
+            width: 100%;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .result {
+            display: none;
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+
+        /* Responsif untuk ukuran layar kecil */
+        @media (max-width: 768px) {
+            #jumbotron-section {
+                flex-direction: column;
+                align-items: center;
+            }
+            .col-md-6 {
+                max-width: 100%;
+            }
+        }
+
+        /* Footer Styling */
+        footer {
+            background-color: rgb(25, 30, 23);
+            color: white;
+            padding: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <div class="navbar-brand">
+                <img class="logo" src="logo1-removebg-preview.png" alt="Logo">
+                <h1 style="color: rgb(255, 255, 255); margin-left: 10px; font-size: 20px;">LINGKUNGANKU</h1>
+            </div>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="home.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="#jumbotron-section">Quiz</a></li>
+                <li class="nav-item"><a class="nav-link" href="donasi.html">Donasi</a></li>
+            </ul>
+            <form class="d-flex ms-3" role="search" action="/search" method="GET">
+                <input class="form-control me-2" type="search" name="q" placeholder="Cari sesuatu..." aria-label="Search">
+                <button class="btn btn-light" type="submit">Cari</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Jumbotron Section dan Donasi Section Bersampingan -->
+    <section id="jumbotron-section" class="container py-5">
+        <div class="row justify-content-center">
+            <!-- Kolom untuk Jumbotron -->
+            <div class="col-md-6 mb-4">
+                <div class="jumbotron">
+                    <h1 class="display-4 text-center">Selamat Datang di LINGKUNGANKU!</h1>
+                    <p class="lead text-center">Proyek sosial untuk lingkungan hidup yang lebih baik. Kami mengajak Anda untuk ikut berkontribusi dalam melestarikan alam!</p>
+                    <hr class="my-4">
+                    <p class="text-center">Mari bersama-sama menjaga bumi kita. Setiap langkah kecil Anda sangat berarti bagi keberlanjutan lingkungan.</p>
+                </div>
+            </div>
+
+            <!-- Kolom untuk Donasi -->
+            <div class="col-md-6">
+                <div class="donation-container">
+                    <h3 class="text-center">Donasi untuk Amal</h3>
+                    <p class="text-center">Dukung proyek sosial kami dengan berdonasi sekarang. Setiap kontribusi sangat berarti!</p>
+                    <form id="donationForm">
+                        <!-- Nama Donatur -->
+                        <div class="form-group">
+                            <label for="name">Nama Lengkap</label>
+                            <input type="text" id="name" class="form-control" placeholder="Masukkan nama Anda" required>
+                        </div>
+                
+                        <!-- Jumlah Donasi -->
+                        <div class="form-group">
+                            <label for="amount">Jumlah Donasi (Rp)</label>
+                            <input type="number" id="amount" class="form-control" placeholder="Masukkan jumlah donasi" required min="10000">
+                        </div>
+                
+                        <!-- Metode Pembayaran -->
+                        <div class="form-group">
+                            <label for="paymentMethod">Metode Pembayaran</label>
+                            <select id="paymentMethod" class="form-control" required>
+                                <option value="">Pilih Metode Pembayaran</option>
+                                <option value="transfer">Transfer Bank</option>
+                                <option value="creditCard">Kartu Kredit</option>
+                                <option value="eWallet">E-Wallet (GoPay, OVO, dll.)</option>
+                            </select>
+                        </div>
+                
+                        <!-- Tombol Kirim -->
+                        <button type="button" class="btn btn-primary btn-donate" onclick="submitDonation()">Kirim Donasi</button>
+                    </form>
+                
+                    <!-- Hasil Donasi -->
+                    <div id="result" class="result alert alert-success">
+                        <p id="resultText"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function submitDonation() {
+            const name = document.getElementById("name").value;
+            const amount = document.getElementById("amount").value;
+            const paymentMethod = document.getElementById("paymentMethod").value;
+
+            if (name && amount && paymentMethod) {
+                document.getElementById("resultText").textContent = `Terima kasih, ${name}, atas donasi sebesar Rp${amount} melalui ${paymentMethod}.`;
+                document.getElementById("result").style.display = 'block';
+                document.getElementById("donationForm").reset();
+            }
+        }
+    </script>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container text-center">
+            <p>&copy; 2025 LINGKUNGANKU. All Rights Reserved.</p>
+            <p>Follow us on:</p>
+            <div>
+                <a href="https://facebook.com" class="text-light me-3" target="_blank">Facebook</a>
+                <a href="https://twitter.com" class="text-light me-3" target="_blank">Twitter</a>
+                <a href="https://instagram.com" class="text-light" target="_blank">Instagram</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

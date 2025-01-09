@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Interaktif - Pelestarian Lingkungan</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        /* Gambar latar belakang */
+        body {
+            background-image: url('bhn/bg.jpg'); /* Ganti dengan path gambar yang sesuai */
+            background-size: cover; 
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background-color: rgb(29, 60, 5);
+            padding: 5px 15px;
+        }
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+        }
+        .logo {
+            max-width: 100px;
+        }
+        .navbar-nav .nav-link {
+            font-weight: 600;
+            color: white !important;
+            text-transform: uppercase;
+            padding: 8px 10px;
+            font-size: 13px;
+        }
+        .navbar-nav .nav-link:hover {
+            background-color: rgba(70, 53, 53, 0.2);
+            transition: 0.3s;
+        }
+        .card {
+            max-width: 600px;
+            margin: auto;
+            border-radius: 10px;
+            border: 1px solid #dee2e6;
+            padding: 20px;
+            background-color: white;
+        }
+        .list-group-item.selected {
+            background-color: #e2e3e5; /* Warna abu-abu untuk jawaban yang dipilih */
+            color: #495057;
+        }
+        .list-group-item.correct {
+            background-color: #d4edda; /* Hijau untuk jawaban benar */
+            color: #155724;
+        }
+        .list-group-item.wrong {
+            background-color: #f8d7da; /* Merah untuk jawaban salah */
+            color: #721c24;
+        }
+        #quiz-section {
+        display: flex;
+        justify-content: center; /* Memposisikan elemen di tengah secara horizontal */
+        align-items: center; /* Memposisikan elemen di tengah secara vertikal */
+        height: 100vh; /* Tinggi elemen setara dengan tinggi viewport */
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <div class="navbar-brand">
+                <img class="logo" src="logo1-removebg-preview.png" alt="Logo">
+                <h1 style="color: rgb(255, 255, 255); margin-left: 10px; font-size: 20px;">LINGKUNGANKU</h1>
+            </div>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="home.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="Quiz.html">Quiz</a></li>
+                <li class="nav-item"><a class="nav-link" href="donasi.html">Donasi</a></li>
+            </ul>
+            <form class="d-flex ms-3" role="search" action="/search" method="GET">
+                <input class="form-control me-2" type="search" name="q" placeholder="Cari sesuatu..." aria-label="Search">
+                <button class="btn btn-light" type="submit">Cari</button>
+            </form>
+        </div>
+    </div>
+
+    <section id="quiz-section" class="container py-5">
+        <div class="card shadow">
+            <div class="card-body">
+                <h1 class="text-center mb-4">Quiz: Pelestarian Lingkungan</h1>
+                <div id="quiz">
+                    <div class="mb-4">
+                        <h4 id="question" class="mb-3"></h4>
+                        <div class="list-group" id="options-container">
+                            <button class="list-group-item list-group-item-action" onclick="selectAnswer(0)"></button>
+                            <button class="list-group-item list-group-item-action" onclick="selectAnswer(1)"></button>
+                            <button class="list-group-item list-group-item-action" onclick="selectAnswer(2)"></button>
+                            <button class="list-group-item list-group-item-action" onclick="selectAnswer(3)"></button>
+                        </div>
+                    </div>
+                    <button id="next-button" class="btn btn-success w-100 mt-3 d-none" onclick="nextQuestion()">Selanjutnya</button>
+                </div>
+                <div id="result" class="d-none text-center">
+                    <h4>Skor Anda: <span id="score"></span></h4>
+                    <p id="message"></p>
+                    <button class="btn btn-primary mt-3" onclick="restartQuiz()">Coba Lagi</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+
+    <script>
+        const questions = [
+            {
+                question: "Apa yang dapat kita lakukan untuk mengurangi polusi udara?",
+                options: ["Menggunakan kendaraan pribadi lebih sering", "Menanam pohon", "Menggunakan produk sekali pakai", "Membuang sampah sembarangan"],
+                answer: 1,
+            },
+            {
+                question: "Apa yang dimaksud dengan daur ulang?",
+                options: ["Proses mengubah barang bekas menjadi produk baru", "Membuang barang bekas ke tempat sampah", "Memasukkan sampah ke tempat yang lebih jauh", "Menjual barang bekas ke pasar"],
+                answer: 0,
+            },
+            {
+                question: "Mengapa penting untuk mengurangi penggunaan plastik sekali pakai?",
+                options: ["Karena plastik sulit terurai dan mencemari lingkungan", "Karena plastik murah", "Karena plastik lebih mudah digunakan", "Karena plastik bisa dibakar tanpa masalah"],
+                answer: 0,
+            },
+            {
+                question: "Apa yang dimaksud dengan energi terbarukan?",
+                options: ["Energi yang berasal dari sumber daya alam yang dapat diperbaharui", "Energi yang dihasilkan dari bahan bakar fosil", "Energi yang digunakan untuk memanaskan rumah", "Energi yang berasal dari sampah"],
+                answer: 0,
+            },
+            {
+                question: "Apa langkah pertama dalam melestarikan lingkungan?",
+                options: ["Membuang sampah di tempatnya", "Mengurangi penggunaan air", "Mengurangi penggunaan energi", "Semua jawaban benar"],
+                answer: 3,
+            },
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let selectedAnswer = null;
+
+        const questionElement = document.getElementById("question");
+        const optionsContainer = document.getElementById("options-container");
+        const nextButton = document.getElementById("next-button");
+        const resultContainer = document.getElementById("result");
+        const scoreElement = document.getElementById("score");
+        const messageElement = document.getElementById("message");
+
+        // Memuat pertanyaan
+        function loadQuestion() {
+            const current = questions[currentQuestion];
+            questionElement.textContent = current.question;
+            const options = optionsContainer.querySelectorAll("button");
+            options.forEach((button, index) => {
+                button.textContent = current.options[index];
+                button.className = "list-group-item list-group-item-action";
+                button.disabled = false; // Aktifkan kembali tombol setelah restart
+            });
+            nextButton.classList.add("d-none");
+            selectedAnswer = null; // Reset jawaban yang dipilih
+        }
+
+        // Memilih jawaban
+        function selectAnswer(selected) {
+            const options = optionsContainer.querySelectorAll("button");
+            options.forEach((button) => button.classList.remove("selected")); // Hapus highlight sebelumnya
+            options[selected].classList.add("selected"); // Tandai jawaban terpilih
+            selectedAnswer = selected; // Simpan jawaban terpilih
+            nextButton.classList.remove("d-none"); // Tampilkan tombol "Selanjutnya"
+        }
+
+        // Lanjut ke pertanyaan berikutnya
+        function nextQuestion() {
+            if (selectedAnswer !== null) {
+                const correctAnswer = questions[currentQuestion].answer;
+                if (selectedAnswer === correctAnswer) score++;
+                highlightAnswer(correctAnswer, selectedAnswer);
+                currentQuestion++;
+                setTimeout(() => {
+                    if (currentQuestion < questions.length) {
+                        loadQuestion();
+                    } else {
+                        showResult();
+                    }
+                }, 1000); // Delay 1 detik sebelum pindah ke pertanyaan berikutnya
+            }
+        }
+
+        // Menandai jawaban yang benar dan salah
+        function highlightAnswer(correctAnswer, selectedAnswer) {
+            const options = optionsContainer.querySelectorAll("button");
+            options[correctAnswer].classList.add("correct");
+            if (selectedAnswer !== correctAnswer) {
+                options[selectedAnswer].classList.add("wrong");
+            }
+            options.forEach((button) => (button.disabled = true)); // Nonaktifkan pilihan setelah dijawab
+        }
+
+        // Menampilkan hasil quiz
+        function showResult() {
+            document.getElementById("quiz").classList.add("d-none");
+            resultContainer.classList.remove("d-none");
+            scoreElement.textContent = `${score} / ${questions.length}`;
+            messageElement.textContent = score === questions.length
+                ? "Luar biasa! Anda menjawab semua dengan benar!"
+                : score >= questions.length / 2
+                ? "Bagus! Anda cukup memahami materi."
+                : "Jangan menyerah, coba lagi!";
+        }
+
+        // Mengulang quiz
+        function restartQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            loadQuestion();
+            resultContainer.classList.add("d-none");
+            document.getElementById("quiz").classList.remove("d-none");
+        }
+
+        window.onload = loadQuestion;
+    </script>
+    
+    <!-- Footer -->
+    <footer class="footer bg-dark text-light py-4 mt-5">
+        <div class="container text-center">
+            <p>&copy; 2025 LINGKUNGANKU. All Rights Reserved.</p>
+            <p>Follow us on:</p>
+            <div>
+                <a href="https://facebook.com" class="text-light me-3" target="_blank">Facebook</a>
+                <a href="https://twitter.com" class="text-light me-3" target="_blank">Twitter</a>
+                <a href="https://instagram.com" class="text-light" target="_blank">Instagram</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
